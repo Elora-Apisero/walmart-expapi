@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:os="http://www.mulesoft.org/schema/mule/os" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd">
+	<flow name="getProductDetailsFlow" doc:id="12f692b5-18de-4629-a374-1238f6cc9d30" >
+		<logger level="INFO" doc:name="Starting Flow" doc:id="e252254c-b395-4f81-8b96-d2bb13708a97" message="Starting /getProductDetailsFlow"/>
+		<http:request method="GET" doc:name="Fetching Walmart Product API" doc:id="2e290d4c-4353-42ac-a04b-5ec6aea505d2" path="/products/v3/get-details" config-ref="Request_Walmart">
+			<http:headers ><![CDATA[#[output application/java
+---
+{
+	"X-Rapidapi-Host" : "walmart.p.rapidapi.com",
+	"X-Rapidapi-Key" : "bb3c9ccf6bmsh57d8fc4aad90698p128d5djsn26c9cc157c7d"
+}]]]></http:headers>
+			<http:query-params ><![CDATA[#[output application/java
+---
+{
+	"usItemId" : attributes.queryParams.itemID
+}]]]></http:query-params>
+		</http:request>
+		<ee:transform doc:name="Walmart Response to ProductDetails" doc:id="0264dc75-9660-48d1-9174-eb0eff24f786" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	product_type_id: payload.data.product.productTypeId,
+	quantity: payload.data.product.maximumSoldByWeight,
+	store_postal_code: payload.data.product.location.postalCode
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<set-variable value="#[payload]" doc:name="Store ProductDetails" doc:id="0ebbd191-93b5-4619-8993-9ef3d589b4fe" variableName="productDetails"/>
+		<logger level="INFO" doc:name="Ending Flow" doc:id="433513a8-e888-4206-b5fe-b8d524d25757" message="#[payload]"/>
+		<flow-ref doc:name="getStoreDetailsFlow" doc:id="c0dcc3f2-c007-482d-be3e-8f04bc947255" name="getStoreDetailsFlow"/>
+	</flow>
+	<sub-flow name="getStoreDetailsFlow" doc:id="67c39779-e574-44dc-b098-a0b711c195be" >
+		<logger level="INFO" doc:name="Starting storeDetailsFlow" doc:id="445d324d-1c89-4519-bf7f-1d207a7c1a47" message="Starting /getStoreDetailsFlow"/>
+		<http:request method="GET" doc:name="Fetching Walmart Store API" doc:id="8b5b0f1e-ea35-46c3-958d-a49f644262c1" config-ref="Request_Walmart" path="/stores/list">
+			<http:headers ><![CDATA[#[output application/java
+---
+{
+	"X-Rapidapi-Host" : "walmart.p.rapidapi.com",
+	"X-Rapidapi-Key" : "bb3c9ccf6bmsh57d8fc4aad90698p128d5djsn26c9cc157c7d"
+}]]]></http:headers>
+			<http:query-params ><![CDATA[#[output application/java
+---
+{
+	"postalCode" : vars.productDetails.store_postal_code
+}]]]></http:query-params>
+		</http:request>
+		<ee:transform doc:name="Walmart Response to StoreDetails having minimum Distance" doc:id="52d1760b-1c9a-45ff-9024-a3372f212a13" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+[payload.data.storesBySearchTerm.stores orderBy($.distance) map ((item, index) -> {
+    store_id: item.id,
+    store_name: item.displayName,
+    store_address: item.address.address ++ "," ++ item.address.city ++ ", " ++ item.address.state ++ ", " ++ item.address.country ++ " (" ++ item.address.postalCode ++ ")",
+    store_distance: item.distance
+})][0][0]]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<set-variable value="#[payload]" doc:name="Store Store Details" doc:id="7fa7cdaf-9ba1-43cd-b003-4cd06364b031" variableName="storeDetails"/>
+		<logger level="INFO" doc:name="Ending storeDetailsFlow" doc:id="d055b4f5-45e2-4bca-88db-41e17f5114d9" message="Ending /getStoreDetailsFlow"/>
+		<flow-ref doc:name="storeDetailsToDBFlow" doc:id="8386ee40-cc52-468e-8efd-3b28873f21fd" name="storeDetailsToDBFlow"/>
+	</sub-flow>
+	<sub-flow name="storeDetailsToDBFlow" doc:id="5f0b7a95-f89d-4e6c-be42-673f35e3927d" >
+		<logger level="INFO" doc:name="Starting storeDetailsToDBFlow" doc:id="54da146f-75fb-462b-ab69-3c09e88bbf61" message="Starting /storeDetailsToDBFlow"/>
+		<ee:transform doc:name="For DB Input" doc:id="d925fb47-7d76-4353-bb39-c838f40be809" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	store_id: vars.storeDetails.store_id,
+	store_name: vars.storeDetails.store_name,
+	store_address: vars.storeDetails.store_address,
+	store_distance: vars.storeDetails.store_distance,
+	store_contact_number: 9876543210,
+	product_type_id: vars.productDetails.product_type_id as Number,
+	quantity: vars.productDetails.quantity
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<http:request method="POST" doc:name="Store to DB System API" doc:id="398b44cc-19cd-4ff5-b238-7b42dc4b73ee" config-ref="Request_DB" path="/db" responseTimeout="20000"/>
+		<logger level="INFO" doc:name="Ending storeDetailsToDBFlow" doc:id="0ca92663-d8bd-4a09-84d3-f8cbece8fcd1" message="Ending /storeDetailsToDBFlow"/>
+	</sub-flow>
+</mule>

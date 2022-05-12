@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="implementation-suite.xml" />
+	<munit:test name="getProductDetailsFlow-success" doc:id="9c9f9db1-dad3-4b1b-a39d-90bce77bccc1" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Fetching Walmart Product API" doc:id="3e77c0c8-f474-45af-a65e-584c9c588f7d" processor="http:request">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="2e290d4c-4353-42ac-a04b-5ec6aea505d2" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/json --- readUrl('classpath://getProductDetailsFlowsuccess/mock_payload.dwl')]" mediaType="application/json" encoding="UTF-8" />
+					<munit-tools:attributes value="#[readUrl('classpath://getProductDetailsFlowsuccess/mock_attributes.dwl')]" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://getProductDetailsFlowsuccess/mock_variable_.dwl')]" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:spy doc:name="Spy Store ProductDetails" doc:id="bbdda0ec-fcc7-4aca-86a9-37622896d365" processor="set-variable">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="0ebbd191-93b5-4619-8993-9ef3d589b4fe" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:before-call >
+					<munit-tools:assert doc:name="Assert payload" doc:id="5446511c-4c3a-4259-88c0-1daee2ecde6b" message="The payload does not match">
+						<munit-tools:that ><![CDATA[#[%dw 2.0
+import getProductDetailsFlowsuccess::spy_assert_payload
+---
+spy_assert_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+					</munit-tools:assert>
+				</munit-tools:before-call>
+				<munit-tools:after-call >
+					<munit-tools:assert doc:name="Assert payload" doc:id="2db717d7-39aa-402e-ba80-75e3793e4cce" message="The payload does not match">
+						<munit-tools:that ><![CDATA[#[%dw 2.0
+import getProductDetailsFlowsuccess::spy_assert_payload1
+---
+spy_assert_payload1::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+					</munit-tools:assert>
+				</munit-tools:after-call>
+			</munit-tools:spy>
+			<munit-tools:spy doc:name="Spy Walmart Response to ProductDetails" doc:id="3a16f683-bee0-4a21-9bcb-9446727908e3" processor="ee:transform">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="0264dc75-9660-48d1-9174-eb0eff24f786" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:before-call >
+					<munit-tools:assert doc:name="Assert payload" doc:id="3d195d44-0f2e-43c1-87a2-279557dfe7ed" message="The payload does not match">
+						<munit-tools:that ><![CDATA[#[%dw 2.0
+import getProductDetailsFlowsuccess::spy_assert_payload2
+---
+spy_assert_payload2::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+					</munit-tools:assert>
+				</munit-tools:before-call>
+				<munit-tools:after-call >
+					<munit-tools:assert doc:name="Assert payload" doc:id="3b048e76-d991-4ed0-bcfe-442a2afb7e33" message="The payload does not match">
+						<munit-tools:that ><![CDATA[#[%dw 2.0
+import getProductDetailsFlowsuccess::spy_assert_payload3
+---
+spy_assert_payload3::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+					</munit-tools:assert>
+				</munit-tools:after-call>
+			</munit-tools:spy>
+			<munit:set-event doc:name="Set Input" doc:id="8ea1e4f2-6e90-4588-a4b1-bab2ca0836b6" >
+				<munit:payload value="#[readUrl('classpath://getProductDetailsFlowsuccess/set-event_payload.dwl')]" encoding="UTF-8" />
+				<munit:attributes value="#[readUrl('classpath://getProductDetailsFlowsuccess/set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="outboundHeaders" value="#[readUrl('classpath://getProductDetailsFlowsuccess/set-event_variable_.dwl')]" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to getProductDetailsFlow" doc:id="e1b4d6d6-4dcf-4403-8660-6bf09640bb8c" name="getProductDetailsFlow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="6900e4e0-ed48-40a7-b011-c704c2c8edea" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import getProductDetailsFlowsuccess::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+			<munit-tools:verify-call doc:name="Verify getStoreDetailsFlow" doc:id="108f7dcd-0fc9-4819-b955-855599417080" processor="flow-ref" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="c0dcc3f2-c007-482d-be3e-8f04bc947255" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Ending Flow" doc:id="a347e991-a65a-418e-a24e-68eead3596d4" processor="logger" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="433513a8-e888-4206-b5fe-b8d524d25757" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Starting Flow" doc:id="5a004530-2457-47ab-9d9a-b8bdec153435" processor="logger" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="e252254c-b395-4f81-8b96-d2bb13708a97" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Store ProductDetails" doc:id="a1a79116-c2ab-40c8-85e7-383f49512390" processor="set-variable" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="0ebbd191-93b5-4619-8993-9ef3d589b4fe" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Walmart Response to ProductDetails" doc:id="25b4dfd8-2c43-4e99-8385-677074a41c95" processor="ee:transform" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="0264dc75-9660-48d1-9174-eb0eff24f786" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+
+</mule>

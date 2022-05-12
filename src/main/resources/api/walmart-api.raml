@@ -1,0 +1,27 @@
+#%RAML 1.0
+title: Walmart API
+description: Walmart Inc. is an American multinational retail corporation that operates a chain of hypermarkets, discount department stores, and grocery stores from the United States, headquartered in Bentonville, Arkansas.
+protocols: [HTTP]
+mediaType: [application/json]
+version: v1
+
+types:
+  order: !include DataType/order.raml
+
+/order:
+  get:
+    displayName: Get Order Detail
+    description: This is used to fetch order details, store details and store them in database.
+    queryParameters:
+      itemID:
+        type: number
+        required: true
+        example: 770319092
+    responses:
+      200:
+        body:
+          application/json:
+            type: order
+            examples:
+              movies: !include Example/order.raml
+

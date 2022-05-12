@@ -1,0 +1,12 @@
+http:
+  port: "8081"
+  host: "0.0.0.0"
+  
+request:
+  host: "walmart.p.rapidapi.com"
+  port: "443"
+  protocol: "HTTPS"
+  
+req:
+  host: "walmart-db-sysapi-eh.us-e2.cloudhub.io"
+  port: "80"
