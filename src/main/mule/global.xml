@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
-	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
-http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+<mule xmlns:api-gateway="http://www.mulesoft.org/schema/mule/api-gateway" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/mule/api-gateway/current/mule-api-gateway.xsd">
 	<configuration-properties doc:name="Configuration properties" doc:id="9c4c9be2-3fb8-4c54-a58e-6f72d1cbf5a6" file="config.yaml" />
 	<http:request-config name="Request_Walmart" doc:name="HTTP Request configuration" doc:id="1b95cf55-d3b6-4ed3-8347-ec822a14d8d5" >
 		<http:request-connection protocol="HTTPS" port="${request.port}" host="${request.host}"/>
@@ -11,4 +12,5 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 	<http:request-config name="Request_DB" doc:name="HTTP Request configuration" doc:id="19ffc956-b2e1-4a50-8ee9-fd436b09520d" basePath="/api">
 		<http:request-connection host="${req.host}" port="${req.port}" />
 	</http:request-config>
+	<api-gateway:autodiscovery apiId="17827120" ignoreBasePath="true" doc:name="API Autodiscovery" doc:id="55da8b1a-e40c-4338-9e3b-32d5cd1d90fa" flowRef="walmart-api-main" />
 </mule>

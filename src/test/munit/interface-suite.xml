@@ -97,10 +97,10 @@ assert_expression_payload::main({payload: payload, attributes: attributes, vars:
     </munit:behavior>
     <munit:execution >
         <try>
-            <flow-ref name="walmart-api-main" doc:id="f632a42b-48f1-4dc0-84d7-06cc3546d94a"/>
+            <flow-ref name="walmart-api-main" doc:id="f632a42b-48f1-4dc0-84d7-06cc3546d94a" doc:name="walmart-api-main"/>
             <error-handler >
                 <on-error-continue type="APIKIT:BAD_REQUEST" enableNotifications="true" logException="true">
-						<logger level="INFO" doc:name="Logger" doc:id="a51958cc-f55b-4c52-8241-d33864162133" message="Continue..."/>
+						<logger level="INFO" doc:name="Continue" doc:id="a51958cc-f55b-4c52-8241-d33864162133" message="Continue..."/>
 					</on-error-continue>
             </error-handler>
         </try>
@@ -124,10 +124,10 @@ assert_expression_payload::main({payload: payload, attributes: attributes, vars:
     </munit:behavior>
     <munit:execution >
         <try>
-            <flow-ref name="walmart-api-main" doc:id="7d87f13d-890a-4c98-9f96-376b022bcbda"/>
+            <flow-ref name="walmart-api-main" doc:id="7d87f13d-890a-4c98-9f96-376b022bcbda" doc:name="walmart-api-main"/>
             <error-handler >
                 <on-error-continue type="APIKIT:NOT_FOUND" enableNotifications="true" logException="true">
-						<logger level="INFO" doc:name="Logger" doc:id="ac19b818-ba17-4684-9c3e-d43b29eb0636" message="Continue..."/>
+						<logger level="INFO" doc:name="Continue" doc:id="ac19b818-ba17-4684-9c3e-d43b29eb0636" message="Continue..."/>
 					</on-error-continue>
             </error-handler>
         </try>
@@ -151,10 +151,10 @@ assert_expression_payload::main({payload: payload, attributes: attributes, vars:
     </munit:behavior>
     <munit:execution >
         <try>
-            <flow-ref name="walmart-api-main" doc:id="14f121dd-be30-4159-b558-ccff93cdb7a2"/>
+            <flow-ref name="walmart-api-main" doc:id="14f121dd-be30-4159-b558-ccff93cdb7a2" doc:name="walmart-api-main"/>
             <error-handler >
                 <on-error-continue type="APIKIT:METHOD_NOT_ALLOWED" enableNotifications="true" logException="true">
-						<logger level="INFO" doc:name="Logger" doc:id="cf2092f5-10dc-489a-9a0d-f2f68a3d5e69" message="Continue..."/>
+						<logger level="INFO" doc:name="Continue" doc:id="cf2092f5-10dc-489a-9a0d-f2f68a3d5e69" message="Continue..."/>
 					</on-error-continue>
             </error-handler>
         </try>
@@ -178,10 +178,10 @@ assert_expression_payload::main({payload: payload, attributes: attributes, vars:
     </munit:behavior>
     <munit:execution >
         <try>
-            <flow-ref name="walmart-api-main" doc:id="b2e97b4b-1437-4869-aa2f-7765af24a5d3"/>
+            <flow-ref name="walmart-api-main" doc:id="b2e97b4b-1437-4869-aa2f-7765af24a5d3" doc:name="walmart-api-main"/>
             <error-handler >
                 <on-error-continue type="APIKIT:NOT_ACCEPTABLE" enableNotifications="true" logException="true">
-						<logger level="INFO" doc:name="Logger" doc:id="6ffd5adb-7fba-4579-8106-d1f7466d3477" message="Continue..."/>
+						<logger level="INFO" doc:name="Continue" doc:id="6ffd5adb-7fba-4579-8106-d1f7466d3477" message="Continue..."/>
 					</on-error-continue>
             </error-handler>
         </try>
@@ -205,10 +205,10 @@ assert_expression_payload::main({payload: payload, attributes: attributes, vars:
     </munit:behavior>
     <munit:execution >
         <try>
-            <flow-ref name="walmart-api-main" doc:id="c3bf3639-36f8-4507-86c4-81252456ec58"/>
+            <flow-ref name="walmart-api-main" doc:id="c3bf3639-36f8-4507-86c4-81252456ec58" doc:name="walmart-api-main"/>
             <error-handler >
                 <on-error-continue type="APIKIT:UNSUPPORTED_MEDIA_TYPE" enableNotifications="true" logException="true">
-						<logger level="INFO" doc:name="Logger" doc:id="681f10d7-07f3-4d22-8044-729a2cf540af" message="Continue..."/>
+						<logger level="INFO" doc:name="Continue" doc:id="681f10d7-07f3-4d22-8044-729a2cf540af" message="Continue..."/>
 					</on-error-continue>
             </error-handler>
         </try>
@@ -232,10 +232,10 @@ assert_expression_payload::main({payload: payload, attributes: attributes, vars:
     </munit:behavior>
     <munit:execution >
         <try>
-            <flow-ref name="walmart-api-main" doc:id="b96251f4-b634-4f95-a941-5cc00f0b6371"/>
+            <flow-ref name="walmart-api-main" doc:id="b96251f4-b634-4f95-a941-5cc00f0b6371" doc:name="walmart-api-main"/>
             <error-handler >
                 <on-error-continue type="APIKIT:NOT_IMPLEMENTED" enableNotifications="true" logException="true">
-						<logger level="INFO" doc:name="Logger" doc:id="e387464f-c4f1-4e77-81d8-b20875f57bf7" message="Continue..."/>
+						<logger level="INFO" doc:name="Continue" doc:id="e387464f-c4f1-4e77-81d8-b20875f57bf7" message="Continue..."/>
 					</on-error-continue>
             </error-handler>
         </try>
@@ -259,10 +259,10 @@ assert_expression_payload::main({payload: payload, attributes: attributes, vars:
     </munit:behavior>
     <munit:execution >
         <try>
-            <flow-ref name="walmart-api-console" doc:id="1db31670-0ea1-4dd9-9b8a-095dded582cf"/>
+            <flow-ref name="walmart-api-console" doc:id="1db31670-0ea1-4dd9-9b8a-095dded582cf" doc:name="walmart-api-console"/>
             <error-handler >
                 <on-error-continue type="APIKIT:NOT_FOUND" enableNotifications="true" logException="true">
-						<logger level="INFO" doc:name="Logger" doc:id="ae517c71-4505-4789-bc6f-9c53068b141f" message="Continue..."/>
+						<logger level="INFO" doc:name="Continue" doc:id="ae517c71-4505-4789-bc6f-9c53068b141f" message="Continue..."/>
 					</on-error-continue>
             </error-handler>
         </try>

@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:os="http://www.mulesoft.org/schema/mule/os" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
-	xmlns:http="http://www.mulesoft.org/schema/mule/http"
-	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+<mule xmlns:validation="http://www.mulesoft.org/schema/mule/validation" xmlns:os="http://www.mulesoft.org/schema/mule/os"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
-http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd">
+http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd">
 	<flow name="getProductDetailsFlow" doc:id="12f692b5-18de-4629-a374-1238f6cc9d30" >
 		<logger level="INFO" doc:name="Starting Flow" doc:id="e252254c-b395-4f81-8b96-d2bb13708a97" message="Starting /getProductDetailsFlow"/>
 		<http:request method="GET" doc:name="Fetching Walmart Product API" doc:id="2e290d4c-4353-42ac-a04b-5ec6aea505d2" path="/products/v3/get-details" config-ref="Request_Walmart">
@@ -21,6 +22,7 @@ http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/cu
 	"usItemId" : attributes.queryParams.itemID
 }]]]></http:query-params>
 		</http:request>
+		<validation:is-not-null doc:name="Product Is not null" doc:id="4241e6a6-4ce5-470e-8d15-68b862d91433" value="#[payload.data.product]" message="No Product Found"/>
 		<ee:transform doc:name="Walmart Response to ProductDetails" doc:id="0264dc75-9660-48d1-9174-eb0eff24f786" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
@@ -36,6 +38,38 @@ output application/json
 		<set-variable value="#[payload]" doc:name="Store ProductDetails" doc:id="0ebbd191-93b5-4619-8993-9ef3d589b4fe" variableName="productDetails"/>
 		<logger level="INFO" doc:name="Ending Flow" doc:id="433513a8-e888-4206-b5fe-b8d524d25757" message="#[payload]"/>
 		<flow-ref doc:name="getStoreDetailsFlow" doc:id="c0dcc3f2-c007-482d-be3e-8f04bc947255" name="getStoreDetailsFlow"/>
+		<error-handler >
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="7bd40624-0f56-475c-82fe-d179b2df06d1" type="HTTP:CONNECTIVITY">
+				<ee:transform doc:name="Error Message" doc:id="ee322817-bb58-4699-9eb2-0b85e6470f2c" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"message": error.description
+}]]></ee:set-payload>
+					</ee:message>
+					<ee:variables >
+						<ee:set-variable variableName="httpStatus" ><![CDATA[500]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+			</on-error-propagate>
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="1a302c5c-edb5-4967-8914-889806f03000" type="VALIDATION:NULL">
+				<ee:transform doc:name="Error Message" doc:id="4c57f85c-c7f6-4db7-a292-8ca9fc1000c0" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"message": error.description
+}]]></ee:set-payload>
+					</ee:message>
+					<ee:variables >
+						<ee:set-variable variableName="httpStatus" ><![CDATA[200]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+			</on-error-propagate>
+		</error-handler>
 	</flow>
 	<sub-flow name="getStoreDetailsFlow" doc:id="67c39779-e574-44dc-b098-a0b711c195be" >
 		<logger level="INFO" doc:name="Starting storeDetailsFlow" doc:id="445d324d-1c89-4519-bf7f-1d207a7c1a47" message="Starting /getStoreDetailsFlow"/>

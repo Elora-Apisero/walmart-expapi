@@ -109,5 +109,62 @@ assert_expression_payload::main({payload: payload, attributes: attributes, vars:
 			</munit-tools:verify-call>
 		</munit:validation>
 	</munit:test>
-
+<munit:test name="getProductDetailsFlowError-HTTP_CONNECTIVITY" description="Mock CONNECTIVITY error" >
+    <munit:behavior >
+        <munit-tools:mock-when processor="http:request">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="GET" attributeName="method" />
+					<munit-tools:with-attribute whereValue="Fetching Walmart Product API" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="2e290d4c-4353-42ac-a04b-5ec6aea505d2" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="/products/v3/get-details" attributeName="path" />
+					<munit-tools:with-attribute whereValue="Request_Walmart" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="HTTP:CONNECTIVITY" />
+				</munit-tools:then-return>
+        </munit-tools:mock-when>
+    </munit:behavior>
+    <munit:execution >
+        <try>
+            <flow-ref name="getProductDetailsFlow" doc:id="4e4f98fc-293e-4971-9963-900610fb40ab" doc:name="getProductDetailsFlow"/>
+            <error-handler >
+                <on-error-continue type="HTTP:CONNECTIVITY" enableNotifications="true" logException="true">
+						<logger level="INFO" doc:name="Continue" doc:id="8d81911f-837f-4bcb-8ac0-b56b98d02514" message="Continue..."/>
+					</on-error-continue>
+            </error-handler>
+        </try>
+    </munit:execution>
+    <munit:validation >
+        <munit-tools:assert-that doc:name="Assert that" doc:id="4f97b754-1aa0-4e3a-8398-80d4b3d3c942" expression="#[vars.httpStatus]" is="#[MunitTools::equalTo(500)]"/>
+			<munit-tools:verify-call processor="mule:logger"/>
+    </munit:validation>
+</munit:test>
+<munit:test name="getProductDetailsFlowError-VALIDATION_NULL" description="Mock CONNECTIVITY error" >
+    <munit:behavior >
+        <munit-tools:mock-when processor="validation:is-not-null">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Product Is not null" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="4241e6a6-4ce5-470e-8d15-68b862d91433" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="No Product Found" attributeName="message" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="VALIDATION:NULL" />
+				</munit-tools:then-return>
+        </munit-tools:mock-when>
+    </munit:behavior>
+    <munit:execution >
+        <try>
+            <flow-ref name="getProductDetailsFlow" doc:id="9a552d4d-5eed-4afd-a30e-a3df6fc98ba7" doc:name="getProductDetailsFlow"/>
+            <error-handler >
+                <on-error-continue type="VALIDATION:NULL" enableNotifications="true" logException="true">
+						<logger level="INFO" doc:name="Continue" doc:id="04e25bbc-6bfc-4bc6-8ef7-c1ea8ad43a1d" message="Continue..."/>
+					</on-error-continue>
+            </error-handler>
+        </try>
+    </munit:execution>
+    <munit:validation >
+        <munit-tools:assert-that doc:name="Assert that" doc:id="52e5cdf8-8230-4705-867b-f6ba941391e6" expression="#[vars.httpStatus]" is="#[MunitTools::equalTo(200)]"/>
+			<munit-tools:verify-call processor="mule:logger"/>
+    </munit:validation>
+</munit:test>
 </mule>
